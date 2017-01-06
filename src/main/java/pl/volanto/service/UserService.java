@@ -41,12 +41,12 @@ public class UserService {
 	}
 	
 	@Transactional
-	public UserDTO addUser(UserDTO userDto) {
+	public UserDTO addUser(UserDTO user) {
 		log.debug("Request to add User");
 		User u = new User();
-		u.setLogin(userDto.getLogin());
-		u.setPassword(userDto.getPassword());
-		u.setContacts(mapper.mapAsList(userDto.getContacts(), Contact.class));
+		u.setLogin(user.getLogin());
+		u.setPassword(user.getPassword());
+		u.setContacts(mapper.mapAsList(user.getContacts(), Contact.class));
 		userRepository.save(u);
 		return mapper.map(u, UserDTO.class);
 	}
@@ -65,6 +65,7 @@ public class UserService {
 		log.debug("Request to delete User: {}", id);
 		userRepository.delete(Long.valueOf(id));
 	}
+	
 	
 }
 

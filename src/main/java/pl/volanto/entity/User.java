@@ -24,6 +24,18 @@ public class User {
 	@OneToMany
 	List<Contact> contacts = new ArrayList<>();
 
+	public User() {
+		
+	}
+	
+	public User(Long id, String login, String password, List<Contact> contacts) {
+		super();
+		this.id = id;
+		this.login = login;
+		this.password = password;
+		this.contacts = contacts;
+	}
+
 	public Long getId() {
 		return id;
 	}

@@ -13,6 +13,18 @@ public class UserDTO {
 
 	List<ContactDTO> contacts = new ArrayList<>();
 
+	public UserDTO() {
+		
+	}
+	
+	public UserDTO(Long id, String login, String password, List<ContactDTO> contacts) {
+		super();
+		this.id = id;
+		this.login = login;
+		this.password = password;
+		this.contacts = contacts;
+	}
+
 	public Long getId() {
 		return id;
 	}
