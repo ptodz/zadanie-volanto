@@ -37,9 +37,7 @@ public class UserService {
 	@Transactional
 	public List<UserDTO> findAll() {
 		log.debug("Request to get all Users");
-		return mapper.mapAsList(
-				userRepository.findAll(), 
-				UserDTO.class);
+		return mapper.mapAsList(userRepository.findAll(), UserDTO.class);
 	}
 	
 	@Transactional

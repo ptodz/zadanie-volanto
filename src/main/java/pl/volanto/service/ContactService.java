@@ -15,6 +15,7 @@ import pl.volanto.entity.Contact;
 import pl.volanto.repository.ContactRepository;
 
 @Service
+@Transactional
 public class ContactService {
 	
 	private final Logger log = LoggerFactory.getLogger(ContactService.class);
