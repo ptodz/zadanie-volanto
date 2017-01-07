@@ -33,7 +33,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/users", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
@@ -105,4 +105,6 @@ public class UserController {
 		UserDTO u = userService.deleteContactFromUser(userId, contactId);
 		return new ResponseEntity<>(u, HttpStatus.OK);
 	}
+	
+
 }
