@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import pl.volanto.dto.ContactDTO;
 import pl.volanto.dto.UserDTO;
+import pl.volanto.entity.User;
 import pl.volanto.service.UserService;
 import pl.volanto.util.RestPreconditions;
 
@@ -43,7 +45,6 @@ public class UserController {
 	public ResponseEntity<?> getUser(@PathVariable String id) {
 		log.debug("REST request to get User: {}", id);	
 		UserDTO userDTO = userService.findOne(id);
-		RestPreconditions.checkFound(userDTO);
 		return  new ResponseEntity<>(userDTO, HttpStatus.OK);
 	}
 	
@@ -60,7 +61,7 @@ public class UserController {
 	public ResponseEntity<?> updateUser(@RequestBody UserDTO updatedUser, 
 						   				@PathVariable String id) {
 		log.debug("REST request to update User: {}", id);
-	    RestPreconditions.checkFound(userService.findOne(id));
+	    RestPreconditions.checkFound(userService.findOne(id), User.class);
 	    userService.updateUser(updatedUser, id);
 	    return new ResponseEntity<>(HttpStatus.CREATED);
 	}	
@@ -69,8 +70,36 @@ public class UserController {
 				   produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteUser(@PathVariable String id) {
 		log.debug("REST request to update User: {}", id);
-		RestPreconditions.checkFound(userService.findOne(id));
+		RestPreconditions.checkFound(userService.findOne(id), User.class);
 		userService.deleteUser(id);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/users/{id}/contacts", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserDTO> addContactToUser(@PathVariable Long id, 
+													@RequestBody ContactDTO contactDTO) {
+		log.debug("REST request to add Contact to User");
+		UserDTO u = userService.addContactToUser(id, contactDTO);
+		return new ResponseEntity<>(u, HttpStatus.CREATED);
+	}
+	
+	@PutMapping(value = "/users/{userId}/contacts/{contactId}", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserDTO> editUsersContact(@PathVariable Long userId, 
+													@PathVariable Long contactId,
+													@RequestBody ContactDTO contactDTO) {
+		log.debug("REST request to edit User's Contact");
+		UserDTO u = userService.editUsersContact(userId, contactId, contactDTO);
+		return new ResponseEntity<>(u, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value = "/users/{userId}/contacts/{contactId}", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserDTO> deleteUsersContact(@PathVariable Long userId, 
+													  @PathVariable Long contactId) {
+		log.debug("REST request to delete User's Contact");
+		UserDTO u = userService.deleteContactFromUser(userId, contactId);
+		return new ResponseEntity<>(u, HttpStatus.OK);
 	}
 }
