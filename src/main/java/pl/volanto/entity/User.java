@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,11 +23,20 @@ public class User {
 	
 	private String password;
 	
+	@ManyToOne
+	Role role;
+	
 	@OneToMany(cascade = {CascadeType.ALL})
 	List<Contact> contacts = new ArrayList<>();
 
 	public User() {
 		
+	}
+	
+	public User(String login, String password, Role role) {
+		this.login = login;
+		this.password = password;
+		this.role = role;
 	}
 	
 	public User(Long id, String login, String password, List<Contact> contacts) {
@@ -67,6 +77,15 @@ public class User {
 
 	public void setContacts(List<Contact> contacts) {
 		this.contacts = contacts;
+	}
+
+	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 }

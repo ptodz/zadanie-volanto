@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,17 +34,19 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/users", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<UserDTO>> getUsers() {
-		log.debug("REST request to get all Users");
+	public ResponseEntity<List<UserDTO>> getCustomers() {
+		log.info("REST request to get all Users");
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/users/{id}", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getUser(@PathVariable String id) {
-		log.debug("REST request to get User: {}", id);	
+	public ResponseEntity<?> getUsers(@PathVariable String id) {
+		log.info("REST request to get User: {}", id);	
 		UserDTO userDTO = userService.findOne(id);
 		return  new ResponseEntity<>(userDTO, HttpStatus.OK);
 	}
@@ -51,7 +54,7 @@ public class UserController {
 	@PostMapping(value = "/users", 
 				 produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> createUser(@RequestBody UserDTO user) {
-		log.debug("REST request to add User");
+		log.info("REST request to add User");
 		userService.addUser(user);	
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}
@@ -60,7 +63,7 @@ public class UserController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateUser(@RequestBody UserDTO updatedUser, 
 						   				@PathVariable String id) {
-		log.debug("REST request to update User: {}", id);
+		log.info("REST request to update User: {}", id);
 	    RestPreconditions.checkFound(userService.findOne(id), User.class);
 	    userService.updateUser(updatedUser, id);
 	    return new ResponseEntity<>(HttpStatus.CREATED);
@@ -69,7 +72,7 @@ public class UserController {
 	@DeleteMapping(value = "/users/{id}", 
 				   produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteUser(@PathVariable String id) {
-		log.debug("REST request to update User: {}", id);
+		log.info("REST request to update User: {}", id);
 		RestPreconditions.checkFound(userService.findOne(id), User.class);
 		userService.deleteUser(id);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -79,7 +82,7 @@ public class UserController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDTO> addContactToUser(@PathVariable Long id, 
 													@RequestBody ContactDTO contactDTO) {
-		log.debug("REST request to add Contact to User");
+		log.info("REST request to add Contact to User");
 		UserDTO u = userService.addContactToUser(id, contactDTO);
 		return new ResponseEntity<>(u, HttpStatus.CREATED);
 	}
@@ -89,7 +92,7 @@ public class UserController {
 	public ResponseEntity<UserDTO> editUsersContact(@PathVariable Long userId, 
 													@PathVariable Long contactId,
 													@RequestBody ContactDTO contactDTO) {
-		log.debug("REST request to edit User's Contact");
+		log.info("REST request to edit User's Contact");
 		UserDTO u = userService.editUsersContact(userId, contactId, contactDTO);
 		return new ResponseEntity<>(u, HttpStatus.OK);
 	}
@@ -98,7 +101,7 @@ public class UserController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDTO> deleteUsersContact(@PathVariable Long userId, 
 													  @PathVariable Long contactId) {
-		log.debug("REST request to delete User's Contact");
+		log.info("REST request to delete User's Contact");
 		UserDTO u = userService.deleteContactFromUser(userId, contactId);
 		return new ResponseEntity<>(u, HttpStatus.OK);
 	}

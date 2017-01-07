@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ma.glasnost.orika.MapperFacade;
@@ -34,6 +35,9 @@ public class UserService {
 	@Autowired
 	private MapperFacade mapper;
 	
+	@Autowired
+	private PasswordEncoder encoder;
+	
 	@Transactional
 	public UserDTO findOne(String id) {
 		log.debug("Request to get User: {}", id);
@@ -52,7 +56,7 @@ public class UserService {
 		log.debug("Request to add User");
 		User u = new User();
 		u.setLogin(user.getLogin());
-		u.setPassword(user.getPassword());
+		u.setPassword(encoder.encode(user.getPassword()));
 		u.setContacts(mapper.mapAsList(user.getContacts(), Contact.class));
 		userRepository.save(u);
 		return mapper.map(u, UserDTO.class);
@@ -64,7 +68,7 @@ public class UserService {
 		RestPreconditions.checkFound(userRepository.findOne(Long.valueOf(id)), User.class);
 		User updatedUser = userRepository.findOne(Long.valueOf(id));
 		updatedUser.setLogin(userDto.getLogin());
-		updatedUser.setPassword(userDto.getPassword());
+		updatedUser.setPassword(encoder.encode(userDto.getPassword()));
 		updatedUser.setContacts(mapper.mapAsList(userDto.getContacts(), Contact.class));
 	}
 	
@@ -75,7 +79,7 @@ public class UserService {
 		userRepository.delete(Long.valueOf(id));
 	}
 	
-	//nie wiem czemu hibernate dodaje dwa na raz kontakty, dlatego dalem delete (wiem, slabe obejscie)
+	//nie wiem czemu hibernate dodaje dwa na raz kontakty, dlatego dalem delete (slabe obejscie)
 	@Transactional
 	public UserDTO addContactToUser(Long id, ContactDTO contact) {
 		log.debug("Request to add Contact to User");

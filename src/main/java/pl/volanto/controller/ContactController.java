@@ -27,13 +27,13 @@ public class ContactController {
 
 	@GetMapping(value = "/contacs", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ContactDTO>> getContacts() {
-		log.debug("REST request to get all Contacts");
+		log.info("REST request to get all Contacts");
 		return new ResponseEntity<>(contactService.findAll(), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/contacs/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ContactDTO>> getContact(@PathVariable String id) {
-		log.debug("REST request to get Contact: {}", id);	
+		log.info("REST request to get Contact: {}", id);	
 		return new ResponseEntity<>(contactService.findAll(), HttpStatus.OK);
 	}
 
