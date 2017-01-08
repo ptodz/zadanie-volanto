@@ -34,7 +34,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@PreAuthorize("hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/users", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<UserDTO>> getCustomers() {
