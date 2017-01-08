@@ -6,7 +6,8 @@ Dane apki:
   - user: rekrutacja
   - bez hasła
   - uruchamianie z wtyczki maven w root folderze projektu: mvn spring-boot:run
-Wszystko dostępne oczywiście w application.properties
+  
+Wszystko dostępne w application.properties
 
 Security: gdyby w bazie nie było userów z odpowiednimi opcjami apka tworzy:
   - jednego admina: admin, hasło: volanto@
