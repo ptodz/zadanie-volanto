@@ -42,7 +42,7 @@ public class UserController {
 		return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/users/{id}", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getUsers(@PathVariable String id) {
