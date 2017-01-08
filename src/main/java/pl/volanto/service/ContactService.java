@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 import ma.glasnost.orika.MapperFacade;
 import pl.volanto.dto.ContactDTO;
 import pl.volanto.entity.Contact;
+import pl.volanto.entity.Image;
+import pl.volanto.entity.User;
 import pl.volanto.repository.ContactRepository;
+import pl.volanto.util.RestPreconditions;
 
 @Service
 @Transactional
@@ -54,6 +57,7 @@ public class ContactService {
 	@Transactional
 	public void updateContact(ContactDTO contactDTO, String id) {
 		log.debug("Request to update Contact: {}", id);
+		RestPreconditions.checkFound(contactRepository.findOne(Long.valueOf(id)), Contact.class);
 		Contact updatedContact = contactRepository.findOne(Long.valueOf(id));
 		updatedContact.setName(contactDTO.getName());
 		updatedContact.setLastName(contactDTO.getLastName());
@@ -65,9 +69,9 @@ public class ContactService {
 	@Transactional
 	public void deleteContact(String id) {
 		log.debug("Request to delete Contact: {}", id);
+		RestPreconditions.checkFound(contactRepository.findOne(Long.valueOf(id)), Contact.class);
 		contactRepository.delete(Long.valueOf(id));
 	}
-	
 	
 	
 }

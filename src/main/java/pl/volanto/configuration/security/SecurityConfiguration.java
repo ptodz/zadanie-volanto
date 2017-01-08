@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionVoter;
@@ -25,15 +24,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity
@@ -62,6 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 	            .antMatchers("/api/users").hasAuthority("ADMIN")
 	            .antMatchers("/api").permitAll()
+	            .antMatchers("/api/contacts/file").permitAll()
 				.anyRequest()
 				.authenticated()
 				.accessDecisionManager(accessDecisionManager())
@@ -86,25 +83,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						session.setAttribute(LOGIN, user.getUsername());
 						response.sendRedirect("/swagger/index.html");
 					}
-				}).permitAll().and().httpBasic();
-
+				}).permitAll()
+				  .and()
+				  .httpBasic();
 	}
-
-	@Bean
-	public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
-		return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(
-				new HttpSessionEventPublisher());
-	}
-
-	@Bean
-	public SessionRegistry sessionRegistry() {
-		return new SessionRegistryImpl();
-	}
-
 
 
 	@Bean
 	public AffirmativeBased accessDecisionManager() {
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		AffirmativeBased affirmativeBased = new AffirmativeBased(Arrays.asList(
 				(AccessDecisionVoter) roleVoter(), authenticatedVoter(),
 				webExpressionVoter()));
@@ -128,7 +115,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	WebExpressionVoter webExpressionVoter() {
 		return new WebExpressionVoter();
 	}
-	
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {

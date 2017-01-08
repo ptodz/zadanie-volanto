@@ -3,6 +3,7 @@ package pl.volanto.entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,6 +23,9 @@ public class Contact {
 	String email;
 
 	String phoneNumber;
+	
+	@OneToOne
+	Image image;
 
 	public Long getId() {
 		return id;
@@ -69,5 +73,13 @@ public class Contact {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
 	}
 }
