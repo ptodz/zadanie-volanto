@@ -1,11 +1,11 @@
 # Zadanie rektutacyjne Volanto
 
 Dane apki:
-  - baza danych posgres
+  - baza danych posgresql
   - nazwa bazy: rektutacja
   - user: rekrutacja
   - bez hasła
-  - 
+  - uruchamianie z wtyczki maven w root folderze projektu: mvn spring-boot:run
 Wszystko dostępne oczywiście w application.properties
 
 Security: gdyby w bazie nie było userów z odpowiednimi opcjami apka tworzy:
